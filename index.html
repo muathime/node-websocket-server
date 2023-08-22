@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Client</title>
+</head>
+<body>
+
+<script>
+  const userId = '12345'; // Replace this with the actual user ID
+
+  // Connect to the WebSocket server
+  const socket = new WebSocket('ws://192.168.43.225:3000');
+
+  // Event listener for when the connection is established
+  socket.addEventListener('open', (event) => {
+    console.log('Connected to the server.');
+
+    // Send user ID as a JSON payload
+    const payload = { userId: userId };
+    socket.send(JSON.stringify(payload));
+  });
+
+  // Event listener for incoming messages
+  socket.addEventListener('message', (event) => {
+    console.log('Received message from server:', event.data);
+    const payload = { userId: userId, message: "Accept request" };
+    socket.send(JSON.stringify(payload));
+  });
+
+  // Event listener for connection closure
+  socket.addEventListener('close', (event) => {
+    console.log('Connection closed:', event);
+  });
+
+  // Event listener for connection errors
+  socket.addEventListener('error', (event) => {
+    console.error('WebSocket error:', event);
+  });
+</script>
+
+</body>
+</html>
