@@ -16,14 +16,14 @@
     console.log('Connected to the server.');
 
     // Send user ID as a JSON payload
-    const payload = { userId: userId };
+    const payload = { userId: userId, signal: true };
     socket.send(JSON.stringify(payload));
   });
 
   // Event listener for incoming messages
   socket.addEventListener('message', (event) => {
     console.log('Received message from server:', event.data);
-    const payload = { userId: userId, message: "Accept request" };
+    const payload = { userId: userId, signal: true, message: "Accept request" };
     socket.send(JSON.stringify(payload));
   });
 

@@ -22,13 +22,27 @@ wss.on("connection", (ws) => {
     try {
       const data = JSON.parse(message);
       const userId = data.userId;
+      const signal = data.signal;
 
       // Store the connection with the provided user ID
-      if (!clients.get(userId)) {
-        clients.set(userId, ws);
-        console.log(`User ${userId} connected.`);
+      if (signal) {
+        if (!clients.get(userId)) {
+          clients.set(userId, ws);
+          console.log(`User ${userId} connected.`);
+          // console.log("Current clients map:", Array.from(clients.entries()));
+        } else {
+          console.log(`User ${userId} already connected.`);
+        }
       } else {
-        console.log(`User ${userId} already connected.`);
+        if (clients.get(userId)) {
+          ws.close();
+          clients.delete(userId);
+          console.log(`User ${userId} disconnected.`);
+          // console.log("Current clients map:", Array.from(clients.entries()));
+        } else {
+          ws.close();
+          console.log(`User ${userId} is offline. No ws connection`);
+        }
       }
     } catch (error) {
       console.error("Error parsing message:", error);
@@ -52,16 +66,16 @@ wss.on("connection", (ws) => {
 // Sample service provider data (for demonstration purposes)
 const serviceProviders = [
   {
-    id: "+254706434259",
+    id: 12345,
     name: "Provider 1",
     status: "online",
-    location: { lat: -1.286389, lon: 36.817223 },
+    location: { lat: -1.225602, lon: 36.924546 },
   },
   {
-    id: 54321,
+    id: "+254702347063",
     name: "Provider 2",
     status: "online",
-    location: { lat: -1.225602, lon: 36.924546 },
+    location: { lat: -1.286389, lon: 36.817223 },
   },
   // ... more service providers ...
 ];
